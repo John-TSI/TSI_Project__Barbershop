@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Barbershop VERSION 1.0.0)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+set(SRC_FILES src/shop.cpp src/barber.cpp src/customer.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)
