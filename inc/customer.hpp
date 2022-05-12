@@ -4,7 +4,9 @@
 
 class Customer
 {
+     // --- attributes ---
 
+    // --- methods ---
 };
 
 #endif

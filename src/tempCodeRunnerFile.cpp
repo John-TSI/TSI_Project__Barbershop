@@ -1,0 +1,2 @@
+
+    barberThread.join();

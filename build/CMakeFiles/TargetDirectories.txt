@@ -1,3 +1,0 @@
-C:/Users/local_admin/Desktop/TSI/Projects/Barbershop/build/CMakeFiles/Barbershop.dir
-C:/Users/local_admin/Desktop/TSI/Projects/Barbershop/build/CMakeFiles/edit_cache.dir
-C:/Users/local_admin/Desktop/TSI/Projects/Barbershop/build/CMakeFiles/rebuild_cache.dir
