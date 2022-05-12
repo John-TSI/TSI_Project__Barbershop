@@ -8,7 +8,7 @@
 
 
 // --- globals ---
-int maxQueueSize = 4;
+int maxQueueSize = 6;
 std::queue<std::unique_ptr<Customer>> queue = {};
 bool sleeping = false;
 
@@ -31,12 +31,11 @@ void BarberProcess()
         {
             queue.pop();
             queueLock.unlock();
-            std::cout << "The barber is cutting a customer's hair; " << queue.size() << " customers are still waiting.\n";
+            std::cout << "The barber is cutting a customer's hair; " << queue.size() << " customers are waiting.\n";
             terminalLock.unlock();
-            std::this_thread::sleep_for(std::chrono::seconds((rand()%5)+1));
+            std::this_thread::sleep_for(std::chrono::seconds((rand()%6)+2));
             terminalLock.lock();
-            std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n";
-            terminalLock.unlock();   
+            std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n";  
         }
     }
 }
@@ -54,20 +53,17 @@ void CustomerProcess()
             sleeping = false;
             sleepCV.notify_one();
             std::cout << "A customer arrives and wakes the barber.\n";
-            terminalLock.unlock();
         }
         else if(queue.size() < maxQueueSize)
         {
             queue.push(std::make_unique<Customer>());
             queueLock.unlock();
             std::cout << "Another customer has joined the queue; there are " << queue.size() << " customers waiting.\n";
-            terminalLock.unlock();
         }
         else
         {
             queueLock.unlock();
             std::cout << "A customer has been unable to join the queue.\n";
-            terminalLock.unlock();
         }
         std::this_thread::sleep_for(std::chrono::seconds((rand()%3)+2));
     }
