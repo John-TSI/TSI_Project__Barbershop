@@ -8,28 +8,40 @@
 #include"barber.hpp"
 #include"customer.hpp"
 
-
-static std::mutex queueMutex, terminalMutex;
-static std::condition_variable sleepCV;
+using std::unique_lock; using std::mutex;
 
 
-struct Barbershop
+class Barbershop
 {
-    // --- attributes ---
+    std::mutex queueMutex, terminalMutex;
+    std::condition_variable sleepCV;
+
     int maxQueueSize = 6;
-    bool sleeping = false;
-    Barber barber;
+    std::unique_ptr<Barber> pBarber;
     std::queue<std::unique_ptr<Customer>> queue = {};
 
-    // --- methods ---
-    Barbershop();
-    void BarberProcess();
-    void CustomerProcess();
+    public:
+        // --- constructors ---
+        Barbershop();
 
-/*     void BarberThread();
-    void CustomerThread(); */
-/*     std::thread BarberThread();
-    std::thread CustomerThread(); */
+        // --- barber actions ---
+        void BarberSleeps(unique_lock<mutex>&, unique_lock<mutex>&);
+        void BarberCutsHair(unique_lock<mutex>&, unique_lock<mutex>&);
+
+        // --- customer actions ---
+        void CustomerWakesBarber(unique_lock<mutex>&);
+        void CustomerWaits(unique_lock<mutex>&);
+        void CustomerLeaves(unique_lock<mutex>&);
+
+        // --- processes ---
+        void BarberProcess();
+        void CustomerProcess();
+
+
+    /*     void BarberThread();
+        void CustomerThread(); */
+    /*     std::thread BarberThread();
+        std::thread CustomerThread(); */
 };
 
 #endif

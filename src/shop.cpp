@@ -5,12 +5,58 @@
 #include"../inc/shop.hpp"
 
 
+// --- constructors ---
 Barbershop::Barbershop() :
-barber(*std::make_unique<Barber>())
+pBarber(std::make_unique<Barber>())
 {
     srand(time(NULL)); // seed rand()
 }
 
+
+// --- barber actions ---
+void Barbershop::BarberSleeps(unique_lock<mutex>& qL, unique_lock<mutex>& tL)
+{
+    pBarber->GoToSleep();
+    tL.unlock();
+    sleepCV.wait(qL);
+}
+
+void Barbershop::BarberCutsHair(unique_lock<mutex>& qL, unique_lock<mutex>& tL)
+{
+    queue.pop();
+    qL.unlock();
+    std::cout << "The barber is cutting a customer's hair; " << queue.size() << " customers are waiting.\n";
+    tL.unlock();
+    std::this_thread::sleep_for(std::chrono::seconds((rand()%2)+2));
+    tL.lock();
+    std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n";  
+}
+
+
+// --- customer actions ---
+void Barbershop::CustomerWakesBarber(std::unique_lock<std::mutex>& qL)
+{
+    queue.push(std::make_unique<Customer>());
+    qL.unlock();
+    pBarber->WakeUp();
+    sleepCV.notify_one();
+}
+
+void Barbershop::CustomerWaits(std::unique_lock<std::mutex>& qL)
+{
+    queue.push(std::make_unique<Customer>());
+    qL.unlock();
+    std::cout << "A customer has joined the queue; there are " << queue.size() << " customers waiting.\n";
+}
+
+void Barbershop::CustomerLeaves(std::unique_lock<std::mutex>& qL)
+{
+    qL.unlock();
+    std::cout << "A customer has been unable to join the queue.\n";
+}
+
+
+// --- processes ---
 void Barbershop::BarberProcess()
 {
     while(true)
@@ -19,20 +65,11 @@ void Barbershop::BarberProcess()
         std::unique_lock<std::mutex> terminalLock(terminalMutex);
         if(queue.size() == 0)
         {
-            sleeping = true;
-            std::cout << "The barber finds no customers waiting, and has gone to sleep.\n";
-            terminalLock.unlock();
-            sleepCV.wait(queueLock);
+            BarberSleeps(queueLock, terminalLock);
         }
         else
         {
-            queue.pop();
-            queueLock.unlock();
-            std::cout << "The barber is cutting a customer's hair; " << queue.size() << " customers are waiting.\n";
-            terminalLock.unlock();
-            std::this_thread::sleep_for(std::chrono::seconds((rand()%2)+2));
-            terminalLock.lock();
-            std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n";  
+            BarberCutsHair(queueLock, terminalLock);
         }
     }   
 }
@@ -43,24 +80,17 @@ void Barbershop::CustomerProcess()
     {
         std::unique_lock<std::mutex> queueLock(queueMutex);
         std::unique_lock<std::mutex> terminalLock(terminalMutex);
-        if(sleeping)
+        if(pBarber->GetIsSleeping())
         { 
-            queue.push(std::make_unique<Customer>());
-            queueLock.unlock();
-            sleeping = false;
-            sleepCV.notify_one();
-            std::cout << "A customer arrives and wakes the barber.\n";
+            CustomerWakesBarber(queueLock);
         }
         else if(queue.size() < maxQueueSize)
         {
-            queue.push(std::make_unique<Customer>());
-            queueLock.unlock();
-            std::cout << "A customer has joined the queue; there are " << queue.size() << " customers waiting.\n";
+            CustomerWaits(queueLock);
         }
         else
         {
-            queueLock.unlock();
-            std::cout << "A customer has been unable to join the queue.\n";
+            CustomerLeaves(queueLock);
         }
         std::this_thread::sleep_for(std::chrono::seconds((rand()%4)+4));
     }
