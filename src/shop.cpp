@@ -5,7 +5,8 @@
 #include"../inc/shop.hpp"
 
 
-Barbershop::Barbershop()
+Barbershop::Barbershop() :
+barber(*std::make_unique<Barber>())
 {
     srand(time(NULL)); // seed rand()
 }
@@ -33,7 +34,7 @@ void Barbershop::BarberProcess()
             terminalLock.lock();
             std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n";  
         }
-    }
+    }   
 }
 
 void Barbershop::CustomerProcess()

@@ -7,8 +7,9 @@ class Barber
     // --- attributes ---
     bool isSleeping = false;
 
-    // --- methods ---
-
+    public:
+        bool GetIsSleeping() const;
+        void SetIsSleeping(bool);
 };
 
 #endif
