@@ -3,8 +3,6 @@
 
 
 // --- constructors ---
-//Customer::Customer() : name( Names[rand()%8] ) {}
-
 Customer::Customer() 
 {
     srand(time(NULL));

@@ -19,7 +19,6 @@ class Barbershop
     condition_variable sleepCV;
 
     int numBarbers = 0, maxQueueSize = 6;
-    unique_ptr<Barber> pBarber;
     std::vector<unique_ptr<Barber>> barberVec = {};
     std::queue<unique_ptr<Customer>> queue = {};
 
@@ -28,12 +27,12 @@ class Barbershop
         // --- constructors ---
         Barbershop();
 
-        // --- threads ---
-        void CreateBarberThread();
+        // --- getters/setters ---
+        std::vector<unique_ptr<Barber>>& GetBarbers();
 
         // --- barber actions ---
-        void BarberSleeps(unique_lock<mutex>&, unique_lock<mutex>&);
-        void BarberCutsHair(unique_lock<mutex>&, unique_lock<mutex>&);
+        void BarberSleeps(unique_ptr<Barber>&, unique_lock<mutex>&, unique_lock<mutex>&);
+        void BarberCutsHair(unique_ptr<Barber>&, unique_lock<mutex>&, unique_lock<mutex>&);
 
         // --- customer actions ---
         void CustomerWakesBarber(unique_lock<mutex>&);
@@ -41,14 +40,14 @@ class Barbershop
         void CustomerLeaves(unique_lock<mutex>&);
 
         // --- processes ---
-        void BarberProcess();
+        void BarberProcess(unique_ptr<Barber>&);
         void CustomerProcess();
 
-
-    /*     void BarberThread();
-        void CustomerThread(); */
-    /*     std::thread BarberThread();
-        std::thread CustomerThread(); */
+        // --- threads ---
+      /*   std::thread CreateBarberThread();
+        std::thread CreateCustomerThread(); */
+        void CreateBarberThread();
+        void CreateCustomerThread();
 };
 
 #endif

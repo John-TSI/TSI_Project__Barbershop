@@ -7,6 +7,8 @@ Barber::Barber(int barberID) : barberID(barberID) {}
 
 
 // --- getters/setters ---
+int Barber::GetID() const { return barberID; }
+void Barber::SetID(const int& input) { barberID = input; }
 bool Barber::GetIsSleeping() const { return isSleeping; }
 void Barber::SetIsSleeping(bool input) { isSleeping = input; }
 unique_ptr<Customer>& Barber::GetCurrentCustomer() { return pCurrentCustomer; }

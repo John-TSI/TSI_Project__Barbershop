@@ -18,11 +18,12 @@ class Barber
         explicit Barber(int);
 
         // --- getters/setters ---
+        int GetID() const;
+        void SetID(const int&);
         bool GetIsSleeping() const;
         void SetIsSleeping(bool);
         unique_ptr<Customer>& GetCurrentCustomer();
         void SetCurrentCustomer(unique_ptr<Customer>&);
-
 
         // --- other methods ---
         void GoToSleep();
