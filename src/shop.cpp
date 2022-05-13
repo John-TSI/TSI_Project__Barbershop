@@ -102,45 +102,34 @@ void Barbershop::CustomerProcess()
 
 
 // --- threads ---
-/* std::thread Barbershop::CreateBarberThread()
-{
-    //unique_ptr<Barber> u_ptr = std::make_unique<Barber>(numBarbers);
-    barberVec.push_back(std::make_unique<Barber>(numBarbers));
-    numBarbers++;
-    std::thread barberThread(&Barbershop::BarberProcess, this, std::ref(barberVec.back()) );
-    //barberThread.detach();
-    return barberThread;
-}
-
-std::thread Barbershop::CreateCustomerThread()
-{
-    std::thread customerThread(&Barbershop::CustomerProcess, this);
-    //customerThread.detach();
-    return customerThread;    
-} */
-
 void Barbershop::CreateBarberThread()
 {
     barberVec.push_back(std::make_unique<Barber>(numBarbers));
     numBarbers++;
     std::thread barberThread(&Barbershop::BarberProcess, this, std::ref(barberVec.back()) );
-    barberThread.detach();
+    threadVec.push_back(move(barberThread));
 }
 
 void Barbershop::CreateCustomerThread()
 {
     std::thread customerThread(&Barbershop::CustomerProcess, this);
-    customerThread.detach();   
+    threadVec.push_back(move(customerThread));   
 }
 
-
-/* std::thread Barbershop::BarberThread()
+void Barbershop::JoinAllThreads()
 {
-    std::thread barberThread(&Barbershop::BarberProcess, this);
-    return barberThread;
+    std::vector<std::thread>::iterator it = threadVec.begin();
+    while(it!=threadVec.end())
+    {
+        std::thread& th = *it;
+        th.join();
+        ++it;
+    }
 }
-std::thread Barbershop::CustomerThread()
+
+void Barbershop::Run()
 {
-    std::thread customerThread(&Barbershop::CustomerProcess, this);
-    return customerThread;
-} */
+    CreateBarberThread();
+    CreateCustomerThread();
+    JoinAllThreads();
+}

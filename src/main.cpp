@@ -25,11 +25,11 @@ int main()
     bThread.join();
     cThread.join(); */
 
-    BS.CreateBarberThread();
+  /*   BS.CreateBarberThread();
     BS.CreateCustomerThread();
+    BS.JoinAllThreads(); */
 
-    int input = 0;
-    std::cin >> input;
+    BS.Run();
 
     return 0;
 }

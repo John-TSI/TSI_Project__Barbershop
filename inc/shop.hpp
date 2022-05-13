@@ -21,6 +21,7 @@ class Barbershop
     int numBarbers = 0, maxQueueSize = 6;
     std::vector<unique_ptr<Barber>> barberVec = {};
     std::queue<unique_ptr<Customer>> queue = {};
+    std::vector<std::thread> threadVec = {};
 
 
     public:
@@ -44,10 +45,10 @@ class Barbershop
         void CustomerProcess();
 
         // --- threads ---
-      /*   std::thread CreateBarberThread();
-        std::thread CreateCustomerThread(); */
         void CreateBarberThread();
         void CreateCustomerThread();
+        void JoinAllThreads();
+        void Run();
 };
 
 #endif
