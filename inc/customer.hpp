@@ -1,12 +1,21 @@
 #ifndef CUSTOMER_HPP
 #define CUSTOMER_HPP
 
+#include<string>
+
 
 class Customer
 {
-    // --- attributes ---
+    std::string name = "";
 
-    // --- methods ---
+    public:
+        // --- constructors ---
+        Customer();  // may not be needed soon
+        explicit Customer(const std::string&);
+
+        // --- getters/setters
+        std::string GetName() const;
+        void SetName(std::string);
 };
 
 #endif
