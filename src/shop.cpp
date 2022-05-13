@@ -1,5 +1,4 @@
 #include<iostream>
-#include<time.h>
 #include<thread>
 #include<chrono>
 #include"../inc/shop.hpp"
@@ -33,36 +32,24 @@ void Barbershop::BarberSleeps(unique_lock<mutex>& qL, unique_lock<mutex>& cL)
 }
 
 void Barbershop::BarberCutsHair(unique_lock<mutex>& qL, unique_lock<mutex>& cL)
-{
-   /*  queue.pop();
-    qL.unlock();
-    std::cout << "The barber is cutting a customer's hair; " << queue.size() << " customers are waiting.\n";
-    cL.unlock();
-    std::this_thread::sleep_for(std::chrono::seconds( (rand()%2)+2 ));
-    cL.lock();
-    std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n"; */
-    
+{   
     pBarber->SetCurrentCustomer(queue.front());
     queue.pop();
     qL.unlock();
-    std::cout << "The barber is cutting a customer's hair; " << queue.size() << " customers are waiting.\n";
+    std::cout << "The barber is cutting " << pBarber->GetCurrentCustomer()->GetName() << "'s hair; " << queue.size() << " customers are waiting.\n\n";
     cL.unlock();
     std::this_thread::sleep_for(std::chrono::seconds( (rand()%2)+2 ));
     cL.lock();
-    std::cout << "The barber has finished a haircut and finds " << queue.size() << " customers waiting.\n";
+    std::cout << "The barber has finished " << pBarber->GetCurrentCustomer()->GetName() << "'s haircut and finds " << queue.size() << " customers waiting.\n\n";
 }
 
 
 // --- customer actions ---
 void Barbershop::CustomerWakesBarber(std::unique_lock<std::mutex>& qL)
 {
-/*     queue.push(std::make_unique<Customer>());
+    queue.push(std::make_unique<Customer>());
     qL.unlock();
-    pBarber->WakeUp();
-    sleepCV.notify_one(); */
-    queue.push(std::make_unique<Customer>("Harold"));
-    qL.unlock();
-    pBarber->WakeUp();
+    pBarber->WakeUp(queue.back()->GetName());
     sleepCV.notify_one();
 }
 
@@ -70,13 +57,13 @@ void Barbershop::CustomerWaits(std::unique_lock<std::mutex>& qL)
 {
     queue.push(std::make_unique<Customer>());
     qL.unlock();
-    std::cout << "A customer has joined the queue; there are " << queue.size() << " customers waiting.\n";
+    std::cout << queue.back()->GetName() << " has joined the queue; there are " << queue.size() << " customers waiting.\n\n";
 }
 
 void Barbershop::CustomerLeaves(std::unique_lock<std::mutex>& qL)
 {
     qL.unlock();
-    std::cout << "A customer has been unable to join the queue.\n";
+    std::cout << "A customer has been unable to join the queue.\n\n";
 }
 
 

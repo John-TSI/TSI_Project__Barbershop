@@ -15,7 +15,6 @@ class Barber
 
     public:
         // --- constructors ---
-        Barber(); // may not be needed soon
         explicit Barber(int);
 
         // --- getters/setters ---
@@ -27,7 +26,7 @@ class Barber
 
         // --- other methods ---
         void GoToSleep();
-        void WakeUp();
+        void WakeUp(const std::string&);
 };
 
 #endif

@@ -4,18 +4,19 @@
 #include<string>
 
 
+static std::string Names[8] = {"Alf", "Bob", "Carl", "Dave", "Elvis", "Fred", "Gary", "Harold"};
+
 class Customer
 {
     std::string name = "";
 
     public:
         // --- constructors ---
-        Customer();  // may not be needed soon
-        explicit Customer(const std::string&);
+        Customer();
 
         // --- getters/setters
         std::string GetName() const;
-        void SetName(std::string);
+        void SetName(const std::string&);
 };
 
 #endif
