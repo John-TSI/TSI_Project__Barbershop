@@ -1,9 +1,9 @@
 #ifndef SHOP_HPP
 #define SHOP_HPP
 
+#include<thread>
 #include<mutex>
 #include<condition_variable>
-#include<memory>
 #include<vector>
 #include<queue>
 #include"barber.hpp"
@@ -25,12 +25,6 @@ class Barbershop
 
 
     public:
-        // --- constructors ---
-        Barbershop();
-
-        // --- getters/setters ---
-        std::vector<unique_ptr<Barber>>& GetBarbers();
-
         // --- barber actions ---
         void BarberSleeps(unique_ptr<Barber>&, unique_lock<mutex>&, unique_lock<mutex>&);
         void BarberCutsHair(unique_ptr<Barber>&, unique_lock<mutex>&, unique_lock<mutex>&);

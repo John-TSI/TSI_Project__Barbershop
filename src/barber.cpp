@@ -19,11 +19,13 @@ void Barber::SetCurrentCustomer(unique_ptr<Customer>& u_ptr) { pCurrentCustomer 
 void Barber::GoToSleep()
 {
     isSleeping = true;
-    std::cout << "The barber finds no customers waiting, and has gone to sleep.\n\n";
+    //std::cout << "The barber finds no customers waiting, and has gone to sleep.\n\n";
+    std::cout << "Barber " << barberID << " finds no customers waiting, and has gone to sleep.\n\n";
 }
 
 void Barber::WakeUp(const std::string& customer)
 {
     isSleeping = false;
-    std::cout << customer << " arrives and wakes the barber.\n\n";
+    //std::cout << customer << " arrives and wakes the barber.\n\n";
+    std::cout << customer << " arrives and wakes barber " << barberID << ".\n\n";
 }
