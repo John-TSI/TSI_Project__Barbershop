@@ -10,7 +10,7 @@ using std::unique_ptr;
 class Barber
 {
     int barberID = 0;
-    bool isSleeping = false;
+    bool isSleeping = false, isBusy = false;
     unique_ptr<Customer> pCurrentCustomer = nullptr;
 
     public:
@@ -21,7 +21,9 @@ class Barber
         int GetID() const;
         void SetID(const int&);
         bool GetIsSleeping() const;
-        void SetIsSleeping(bool);
+        void SetIsSleeping(const bool);
+        bool GetIsBusy() const;
+        void SetIsBusy(const bool);
         unique_ptr<Customer>& GetCurrentCustomer();
         void SetCurrentCustomer(unique_ptr<Customer>&);
 
